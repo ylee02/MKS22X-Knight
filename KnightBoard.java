@@ -8,7 +8,7 @@ public class KnightBoard {
 		throw new IllegalArgumentException("Rows and/or columns cannot be negative.");
 	}
 	board = new int[startingRows][startingCols];
-	level = 0;
+	level = 1;
   }
 
   public int findDigits(int num) {
@@ -57,7 +57,7 @@ public class KnightBoard {
 		throw new IllegalArgumentException("Knight out of bounds");
 	}
 	checkBoard();
-	level = 0;
+	level = 1;
     return solveH(startingRow, startingCol);
   }
 
@@ -91,13 +91,14 @@ public class KnightBoard {
 		throw new IllegalArgumentException("Knight out of bounds");
 	}
 	checkBoard();
-	level=0;
+	level=1;
 	return countH(startingRow, startingCol);
   }
   
   public int countH(int row, int col) {
 	  //solveH()
-	  if (level == board.length * board[0].length) {
+	  if (level == board.length * board[0].length + 1) {
+		  System.out.println(toString());
 		  return 1;
 	  }
 	  int ans = 0;
@@ -112,7 +113,7 @@ public class KnightBoard {
 		  
 
   private boolean solveH(int row ,int col) {
-	  if (level == board.length * board[0].length) {
+	  if (level > board.length * board[0].length) {
 		  return true;
 	  }
 	  for (int i = 0; i < 15; i += 2) {
