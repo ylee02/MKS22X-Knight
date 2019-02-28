@@ -1,8 +1,14 @@
 public class KnightBoard {
   private int[][] board;
+  private int[] moves = {1,2,-1,2,1,-2,-1,-2,2,1,-2,1,2,-1,-2,-1};
+  private int level;
   //@throws IllegalArgumentException when either parameter is negative.
-  public KnightBoard(int startingRows,int startingCols){
-    board = new int[startingRows][startingCols];
+  public KnightBoard(int startingRows,int startingCols) throws IllegalArgumentException{
+    if (startingRows < 0 || startingCols < 0) {
+		throw new IllegalArgumentException("Rows and/or columns cannot be negative.");
+	}
+	board = new int[startingRows][startingCols];
+	level = 0;
   }
 
   public int findDigits(int num) {
@@ -32,20 +38,41 @@ public class KnightBoard {
   public int[][] getBoard() {
     return board;
   }
+  
+  public boolean checkBoard() {
+	  for (int i = 0; i < board.length; i++) {
+		  for (int y = 0; y< board[0].length; y++) {
+			  if (board[i][y] < 0) {
+				  throw new IllegalStateException("Board cannot contain negative values");
+			  }
+		  }
+	  }
+  }	  
 
   //@throws IllegalStateException when the board contains non-zero values.
   //@throws IllegalArgumentException when either parameter is negative
   //or out of bounds.
   public boolean solve(int startingRow, int startingCol){
-    return solveH(startingRow, startingCol, 0);
+	if (startingRow <= 0 || startingCol <= 0) {
+		throw new IllegalArgumentException("Board cannot have non-positive dimensions");
+	}
+	checkBoard();
+	
+	level = 0;
+    return solveH(startingRow, startingCol);
   }
 
   public boolean addKnight(int r, int c, int level) {
     if (r >= board.length || c >= board[0].length || r < 0 || c < 0 || board[r][c] != 0) {
       return false;
     }
-    board[r][c] = level;
-    return true;
+	if (board[r][c] == 0) {
+		board[r][c] = level;
+		level++;
+		return true;
+	}
+	return false;
+    
 
   }
 
@@ -54,6 +81,7 @@ public class KnightBoard {
       return;
     }
     board[r][c] = 0;
+	level -= 1;
   }
 
   //@throws IllegalStateException when the board contains non-zero values.
@@ -63,52 +91,22 @@ public class KnightBoard {
     return 0;
   }
 
-  private boolean solveH(int row ,int col, int level) {
-    if (level == board.length * board[0].length && level != 0) {
-      return true;
-    }
-
-    if (addKnight(row, col, level)) {
-      System.out.println(toString());
-      if (solveH(row - 2, col + 1, level + 1)) {
-        System.out.println("a");
-        return true;
-      }
-      if (solveH(row - 2, col - 1, level + 1)) {
-        System.out.println("b");
-        return true;
-      }
-      if (solveH(row - 1, col - 2, level + 1)) {
-        System.out.println("c");
-        return true;
-      }
-      if (solveH(row - 1, col + 2, level + 1)) {
-        System.out.println("d");
-        return true;
-      }
-      if (solveH(row + 1, col - 2, level + 1)) {
-        System.out.println("e");
-        return true;
-      }
-      if (solveH(row + 1, col + 2, level + 1)) {
-        System.out.println("f");
-        return true;
-      }
-      if (solveH(row + 2, col + 1, level + 1)) {
-        System.out.println("g");
-        return true;
-      }
-      if (solveH(row + 2, col - 1, level + 1)) {
-        System.out.println("h");
-        return true;
-      }
-
-    }
-    removeKnight(row,col);
-    level -= 1;
-    return false;
-
+  private boolean solveH(int row ,int col) {
+	  if (level == board.length * board[0].length) {
+		  return true;
+	  }
+	  for (int i = 0; i < 15; i += 2) {
+		  if (addKnight(row, col){
+			  if solveH(row + moves[i], col + moves[i + 1]) {
+				  return true;
+			  }
+			  removeKnights(row, col);
+		  }
+	  }
+	  return false;
+	  
   }
+    
   // level is the # of the knight
 
 
