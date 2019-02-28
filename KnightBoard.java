@@ -92,7 +92,7 @@ public class KnightBoard {
 	}
 	checkBoard();
 	level=1;
-	return countH(startingRow, startingCol);
+	return countH(startingRow, startingCol) / 8;
   }
   
   public int countH(int row, int col) {
