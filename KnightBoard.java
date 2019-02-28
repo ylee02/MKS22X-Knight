@@ -39,7 +39,7 @@ public class KnightBoard {
     return board;
   }
   
-  public boolean checkBoard() {
+  public void checkBoard() {
 	  for (int i = 0; i < board.length; i++) {
 		  for (int y = 0; y< board[0].length; y++) {
 			  if (board[i][y] < 0) {
@@ -53,16 +53,15 @@ public class KnightBoard {
   //@throws IllegalArgumentException when either parameter is negative
   //or out of bounds.
   public boolean solve(int startingRow, int startingCol){
-	if (startingRow <= 0 || startingCol <= 0) {
-		throw new IllegalArgumentException("Board cannot have non-positive dimensions");
+	if (startingRow < 0 || startingCol < 0 || startingRow >= board.length || startingCol >= board[0].length) {
+		throw new IllegalArgumentException("Knight out of bounds");
 	}
 	checkBoard();
-	
 	level = 0;
     return solveH(startingRow, startingCol);
   }
 
-  public boolean addKnight(int r, int c, int level) {
+  public boolean addKnight(int r, int c) {
     if (r >= board.length || c >= board[0].length || r < 0 || c < 0 || board[r][c] != 0) {
       return false;
     }
@@ -88,19 +87,40 @@ public class KnightBoard {
   //@throws IllegalArgumentException when either parameter is negative
   //or out of bounds.
   public int countSolutions(int startingRow, int startingCol){
-    return 0;
+    if (startingRow < 0 || startingCol < 0 || startingRow >= board.length || startingCol >= board[0].length) {
+		throw new IllegalArgumentException("Knight out of bounds");
+	}
+	checkBoard();
+	level=0;
+	return countH(startingRow, startingCol);
   }
+  
+  public int countH(int row, int col) {
+	  //solveH()
+	  if (level == board.length * board[0].length) {
+		  return 1;
+	  }
+	  int ans = 0;
+	  for (int i = 0; i < 15; i+=2) {
+		  if (addKnight(row, col)) {
+			ans += countH(row + moves[i], col + moves[i+1]);
+			removeKnight(row,col);
+		  }
+	  }
+	  return ans;
+  }
+		  
 
   private boolean solveH(int row ,int col) {
 	  if (level == board.length * board[0].length) {
 		  return true;
 	  }
 	  for (int i = 0; i < 15; i += 2) {
-		  if (addKnight(row, col){
-			  if solveH(row + moves[i], col + moves[i + 1]) {
+		  if (addKnight(row, col)){
+			  if (solveH(row + moves[i], col + moves[i + 1])) {
 				  return true;
 			  }
-			  removeKnights(row, col);
+			  removeKnight(row, col);
 		  }
 	  }
 	  return false;
