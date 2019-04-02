@@ -8,10 +8,10 @@ public class KnightBoard {
   public KnightBoard(int startingRows,int startingCols) throws IllegalArgumentException{
     if (startingRows < 0 || startingCols < 0) {
 		throw new IllegalArgumentException("Rows and/or columns cannot be negative.");
-	}
-	board = new int[startingRows][startingCols];
-  solutionBoard = new int[startingRows][startingCols];
-	level = 1;
+  	}
+  	board = new int[startingRows][startingCols];
+    solutionBoard = new int[startingRows][startingCols];
+  	level = 1;
   }
 
   public int findDigits(int num) {
@@ -24,13 +24,13 @@ public class KnightBoard {
 
   public String toString() {
     String ans = "";
-    for (int i = 0; i < board.length; i++) {
-      for (int y = 0; y < board[0].length; y++) {
-        if (board[i][y] / 10 == 0) {
-          ans += " " + board[i][y] + " ";
+    for (int i = 0; i < solutionBoard.length; i++) {
+      for (int y = 0; y < solutionBoard[0].length; y++) {
+        if (solutionBoard[i][y] / 10 == 0) {
+          ans += " " + solutionBoard[i][y] + " ";
         }
         else {
-          ans += board[i][y] + " ";
+          ans += solutionBoard[i][y] + " ";
         }
       }
       ans += "\n";
@@ -66,10 +66,9 @@ public class KnightBoard {
     }
   }
 
-  public void solve(int row, int col) {
+  public boolean solve(int row, int col) {
     fillBoard();
-    solveH(row, col);
-    System.out.println(toString());
+    return solveH(row, col);
   }
 
   public boolean solveH(int row, int col) {
@@ -112,12 +111,9 @@ public class KnightBoard {
 
   public int[] findMin(int row, int col) {
     int[] ans = new int[3];
-    ans[0] = board[row + moves[0]][col + moves[1]];
-    ans[1] = row+  moves[0];
-    ans[2] = col + moves[1];
     for (int i = 2; i < moves.length; i+=2 ) {
       try {
-        if (board[row + moves[i]][col +moves[i+1]] < ans[0] && board[row + moves[i]][col +moves[i+1]] <= -1) {
+        if ((board[row + moves[i]][col +moves[i+1]] < ans[0] && board[row + moves[i]][col +moves[i+1]] <= -1) || board[row + moves[i]][col +moves[i+1]] == 0) {
           ans[0] = board[row + moves[i]][col + moves[i + 1]];
           ans[1] = row+  moves[i];
           ans[2] = col + moves[i + 1];
